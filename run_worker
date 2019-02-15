@@ -1,0 +1,1 @@
+go run processor.go task_model.go utils.go config.go dianping_crawler.go >> ./worker.log
