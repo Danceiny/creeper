@@ -5,32 +5,7 @@ import (
 	"github.com/Danceiny/gocelery"
 	log "github.com/sirupsen/logrus"
 	urllib "net/url"
-	"os"
-	"strconv"
 )
-
-func init() {
-	var tmp string
-	var b bool
-	if tmp, b = os.LookupEnv("CELERY_BROKER_HOST"); b {
-		CELERY_BROKER_HOST = tmp
-	}
-	if tmp, b = os.LookupEnv("CELERY_BROKER_PORT"); b {
-		CELERY_BROKER_PORT, _ = strconv.Atoi(tmp)
-	}
-	if tmp, b = os.LookupEnv("CELERY_BROKER_PASSWORD"); b {
-		CELERY_BROKER_PASSWORD = tmp
-	}
-	if tmp, b = os.LookupEnv("CELERY_BACKEND_HOST"); b {
-		CELERY_BACKEND_HOST = tmp
-	}
-	if tmp, b = os.LookupEnv("CELERY_BACKEND_PORT"); b {
-		CELERY_BACKEND_PORT, _ = strconv.Atoi(tmp)
-	}
-	if tmp, b = os.LookupEnv("CELERY_BACKEND_PASSWORD"); b {
-		CELERY_BACKEND_PASSWORD = tmp
-	}
-}
 
 func interfaces2strings(input []interface{}, elementIsString bool) []string {
 	output := make([]string, len(input))

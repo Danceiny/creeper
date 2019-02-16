@@ -103,7 +103,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
 		// cookie := c.Cookies(r.URL.String())
 	})
 	c.OnError(func(response *colly.Response, e error) {
-		log.Errorf("response: %v, error: %v", response, e)
+		log.Errorf("response: %s, error: %v", response.Body, e)
 	})
 
 	log.Infof("start visiting %q", task.urls())

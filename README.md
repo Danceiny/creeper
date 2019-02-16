@@ -1,2 +1,2 @@
 # creeper
-爬虫
+crawler for `leads-factory`  
