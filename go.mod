@@ -1,7 +1,9 @@
 module github.com/Danceiny/creeper
 
 require (
-	github.com/Danceiny/gocelery v0.0.0-20190215083634-cfa6ca29bd18
+	github.com/Danceiny/go.fastjson v0.0.0-20190218032326-3a8cec0e627c // indirect
+	github.com/Danceiny/go.utils v0.0.0-20190218032117-7fcad74fc938
+	github.com/Danceiny/gocelery v0.0.2
 	github.com/PuerkitoBio/goquery v1.5.0 // indirect
 	github.com/antchfx/htmlquery v1.0.0 // indirect
 	github.com/antchfx/xmlquery v1.0.0 // indirect
@@ -13,6 +15,7 @@ require (
 	github.com/google/go-cmp v0.2.0 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/kr/pty v1.1.3 // indirect
 	github.com/onsi/ginkgo v1.7.0 // indirect
 	github.com/onsi/gomega v1.4.3 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
@@ -23,5 +26,6 @@ require (
 	golang.org/x/sync v0.0.0-20181221193216-37e7f081c4d4 // indirect
 	google.golang.org/appengine v1.4.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
+	gopkg.in/yaml.v2 v2.2.2 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
 )
