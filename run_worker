@@ -1,1 +1,6 @@
-CELERY_BROKER_HOST=192.168.1.40 CELERY_BACKEND_HOST=192.168.1.40 go run processor.go task_model.go utils.go config.go dianping_crawler.go >> ./worker.log 2>&1
+REDIS_HOST=192.168.1.40
+cd proxy_pool/Run
+lsof -i:5010|grep python|awk '{print $2}'|xargs kill
+PROXY_BACKEND_HOST=$REDIS_HOST python main.py > proxy.log 2>&1 &
+cd ../../
+PROXY_BACKEND_HOST=$REDIS_HOST CELERY_BROKER_HOST=$REDIS_HOST CELERY_BACKEND_HOST=$REDIS_HOST go run config.go processor.go task_model.go utils.go dianping_crawler.go

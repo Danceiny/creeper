@@ -18,7 +18,7 @@ func init() {
         "url":      "http://www.dianping.com",
         "subUrls":  []string{"shanghai"},
         // "subUrls2": []string{"ch75", "education",},
-        "subUrls2": []string{"ch75"},
+        "subUrls2": []string{"ch75/p{uint}"},
     }
     SITES["dianping"] = DIANPING
 }

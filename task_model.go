@@ -3,7 +3,10 @@ package main
 import (
     "fmt"
     log "github.com/sirupsen/logrus"
+    "math/rand"
     urllib "net/url"
+    "regexp"
+    "time"
 )
 
 type CrawlerTask struct {
@@ -13,6 +16,10 @@ type CrawlerTask struct {
     SubUrls2 []string
 }
 
+func (task *CrawlerTask) ResultFilename() string {
+    y, m, d := time.Now().Date()
+    return fmt.Sprintf("%s_%d_%d_%d.txt", task.SiteName, y, m, d)
+}
 func (task *CrawlerTask) urlsCount() int {
     var l1, l2 int
     if task.SubUrls2 == nil {
@@ -36,12 +43,15 @@ func (task *CrawlerTask) urlsCount() int {
 }
 
 func (task *CrawlerTask) urls() []string {
+    var reg = regexp.MustCompile("{uint}")
     var total = task.urlsCount()
     var urls = make([]string, total)
     var cnt = 0
     for _, url := range task.SubUrls {
+        reg.ReplaceAllString(url, fmt.Sprint(rand.Int()))
         if task.SubUrls2 != nil && len(task.SubUrls2) > 0 {
             for _, url2 := range task.SubUrls2 {
+                reg.ReplaceAllString(url2, fmt.Sprint(rand.Int()))
                 urls[cnt] = fmt.Sprintf("%s/%s/%s", task.Url, url, url2)
                 cnt++
             }
