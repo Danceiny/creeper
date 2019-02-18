@@ -1,1 +1,1 @@
-go run processor.go task_model.go utils.go config.go dianping_crawler.go >> ./worker.log
+CELERY_BROKER_HOST=192.168.1.40 CELERY_BACKEND_HOST=192.168.1.40 go run processor.go task_model.go utils.go config.go dianping_crawler.go >> ./worker.log 2>&1

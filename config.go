@@ -2,7 +2,6 @@ package main
 
 import (
     . "github.com/Danceiny/go.utils"
-    "os"
 )
 
 var (
@@ -15,13 +14,6 @@ var (
 )
 
 func init() {
-    _ = os.Setenv("CELERY_BROKER_HOST", "127.0.0.1")
-    _ = os.Setenv("CELERY_BROKER_PORT", "6379")
-    _ = os.Setenv("CELERY_BROKER_PASSWORD", "")
-    _ = os.Setenv("CELERY_BACKEND_HOST", "127.0.0.1")
-    _ = os.Setenv("CELERY_BACKEND_PORT", "6379")
-    _ = os.Setenv("CELERY_BACKEND_PASSWORD", "")
-
     CELERY_BROKER_HOST = GetEnvOrDefault("CELERY_BROKER_HOST", "127.0.0.1").(string)
     CELERY_BROKER_PORT = GetEnvOrDefault("CELERY_BROKER_PORT", 6379).(int)
     CELERY_BROKER_PASSWORD = GetEnvOrDefault("CELERY_BROKER_PASSWORD", "").(string)
