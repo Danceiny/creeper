@@ -1,8 +1,8 @@
 module github.com/Danceiny/creeper
 
 require (
-	github.com/Danceiny/go.fastjson v0.0.0-20190218032326-3a8cec0e627c // indirect
-	github.com/Danceiny/go.utils v0.0.0-20190218032117-7fcad74fc938
+	github.com/Danceiny/go.fastjson v0.0.0-20190218060343-046293657ec2 // indirect
+	github.com/Danceiny/go.utils v0.0.0-20190218060749-bfae6b6c32dd
 	github.com/Danceiny/gocelery v0.0.2
 	github.com/PuerkitoBio/goquery v1.5.0 // indirect
 	github.com/antchfx/htmlquery v1.0.0 // indirect

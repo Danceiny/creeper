@@ -2,24 +2,11 @@ package main
 
 import (
     "fmt"
+    utils "github.com/Danceiny/go.utils"
     "github.com/Danceiny/gocelery"
     log "github.com/sirupsen/logrus"
     urllib "net/url"
 )
-
-func interfaces2strings(input []interface{}, elementIsString bool) []string {
-    output := make([]string, len(input))
-    if elementIsString {
-        for i, o := range input {
-            output[i] = o.(string)
-        }
-    } else {
-        for i, o := range input {
-            output[i] = fmt.Sprint(o)
-        }
-    }
-    return output
-}
 
 /**
 kwargs -> Task的字典（k-v）形式
@@ -43,12 +30,12 @@ func (task *CrawlerTask) ParseKwargs(kwargs map[string]interface{}) error {
     if subUrls, ok := kwargs["subUrls"]; !ok {
         return fmt.Errorf("undefined kwarg subUrls")
     } else {
-        task.SubUrls = interfaces2strings(subUrls.([]interface{}), true)
+        task.SubUrls = utils.ToStrings(subUrls.([]interface{}))
     }
     if subUrls2, ok := kwargs["subUrls2"]; !ok {
         return fmt.Errorf("undefined kwarg subUrls2")
     } else {
-        task.SubUrls2 = interfaces2strings(subUrls2.([]interface{}), true)
+        task.SubUrls2 = utils.ToStrings(subUrls2.([]interface{}))
     }
     return nil
 }

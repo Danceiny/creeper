@@ -4,10 +4,16 @@ github.com/Danceiny/go.fastjson v0.0.0-20190216105244-da65d641a199 h1:85ZeQ5DILs
 github.com/Danceiny/go.fastjson v0.0.0-20190216105244-da65d641a199/go.mod h1:gJj9mUrey4CKlq6s6nJOBsYzAdxnqgnTllMvhyCANYY=
 github.com/Danceiny/go.fastjson v0.0.0-20190218032326-3a8cec0e627c h1:uhdWhLFZEcA46iJWvCMJCaLK0St6fOcCxAgPkR3P4io=
 github.com/Danceiny/go.fastjson v0.0.0-20190218032326-3a8cec0e627c/go.mod h1:8QKtFqZczNHb5Q5iCl1NKXNtTvVP4Om7Vh1SDch/aHU=
+github.com/Danceiny/go.fastjson v0.0.0-20190218060343-046293657ec2 h1:OTq4s3sIpua9h53f2wyeAsGaoB2fDS20xNQAR4IC5nA=
+github.com/Danceiny/go.fastjson v0.0.0-20190218060343-046293657ec2/go.mod h1:tgUAaOwdb2wH36m9n3Syf2h8osX5uWQRicaZr5gqbTg=
 github.com/Danceiny/go.utils v0.0.0-20190216135722-d2a64efceb61 h1:GfnMnmJPfzG5U0wCWaP3GI88IAPitf8o4Hxz8ngw3pw=
 github.com/Danceiny/go.utils v0.0.0-20190216135722-d2a64efceb61/go.mod h1:r9TWTo8jlZRrdlA9Cq4aBa8qm/H7nauesewfmdXVpIo=
 github.com/Danceiny/go.utils v0.0.0-20190218032117-7fcad74fc938 h1:9qRkgQoWZkcw95Em+eKrdMHP+uJchkYA1gMCzrzbbDo=
 github.com/Danceiny/go.utils v0.0.0-20190218032117-7fcad74fc938/go.mod h1:r9TWTo8jlZRrdlA9Cq4aBa8qm/H7nauesewfmdXVpIo=
+github.com/Danceiny/go.utils v0.0.0-20190218054729-4e3cafe9d51c h1:6cEew0lJ2LUXVDwQRO6HhKPuk/6k7jjUs84Z1uuqPF0=
+github.com/Danceiny/go.utils v0.0.0-20190218054729-4e3cafe9d51c/go.mod h1:r9TWTo8jlZRrdlA9Cq4aBa8qm/H7nauesewfmdXVpIo=
+github.com/Danceiny/go.utils v0.0.0-20190218060749-bfae6b6c32dd h1:smB3mjG4KtIVVZ+EBIaxsWdloX2fiqDe21A3FDLNdOw=
+github.com/Danceiny/go.utils v0.0.0-20190218060749-bfae6b6c32dd/go.mod h1:r9TWTo8jlZRrdlA9Cq4aBa8qm/H7nauesewfmdXVpIo=
 github.com/Danceiny/go.uuid v1.3.0 h1:gYWB1gla85dBJZgJn0yjr+RS6x+NpY29i9Bi/UkRnEI=
 github.com/Danceiny/go.uuid v1.3.0/go.mod h1:fQ1Tm9IYTZ+DIghzIYRqraBsosDiQ70xeFhxGgtu+rA=
 github.com/Danceiny/gocelery v0.0.0-20190215083634-cfa6ca29bd18 h1:WGvwZu43r/0F6I4wz9ciQMQaLl9NPuKJZFvXPvFn3oE=
@@ -85,6 +91,7 @@ github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXf
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/temoto/robotstxt v0.0.0-20180810133444-97ee4a9ee6ea h1:hH8P1IiDpzRU6ZDbDh/RDnVuezi2oOXJpApa06M0zyI=
 github.com/temoto/robotstxt v0.0.0-20180810133444-97ee4a9ee6ea/go.mod h1:aOux3gHPCftJ3KHq6Pz/AlDjYJ7Y+yKfm1gU/3B0u04=
+github.com/yongman/go v0.0.0-20181128063222-fa82ca704991/go.mod h1:rUGD9Ye+7sT8wUP7OlX5EIKm6xHAUh92vU/wc6/X+ac=
 golang.org/x/crypto v0.0.0-20180904163835-0709b304e793 h1:u+LnwYTOOW7Ukr/fppxEb1Nwz0AtPflrblfvUudpo+I=
 golang.org/x/crypto v0.0.0-20180904163835-0709b304e793/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
 golang.org/x/crypto v0.0.0-20190211182817-74369b46fc67 h1:ng3VDlRp5/DHpSWl02R4rM9I+8M2rhmsuLwAMmkLQWE=
