@@ -51,7 +51,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
     if PROXYS == nil || len(PROXYS) == 0 {
         PROXYS = GetAllProxyUrl()
     }
-    log.Debugf("proxys size: %d, example: %s", len(PROXYS), PROXYS[0])
+    log.Infof("proxys size: %d, example: %s", len(PROXYS), PROXYS[0])
     var rp colly.ProxyFunc
     rp, err = RoundRobinProxySwitcher(PROXYS...)
     // PanicError(err)
