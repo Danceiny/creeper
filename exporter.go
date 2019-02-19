@@ -7,14 +7,88 @@ import (
     "github.com/Danceiny/go.fastjson"
     . "github.com/Danceiny/go.utils"
     "github.com/sirupsen/logrus"
+    "io"
     "io/ioutil"
     "os"
-    "reflect"
     "strings"
     "time"
 )
 
-func openRecordFile(siteName string) (f *os.File) {
+type FORMAT int
+type T int
+
+const (
+    _FORMAT = iota
+    EXCEL_FORMAT
+)
+const (
+    _T = iota
+    T_SHOP
+)
+
+type Exporter interface {
+    openRecordFile() *os.File
+    archiveRecordFile(*os.File)
+    exportId(id string, index int, )
+    idExportedIndex(id string) (int, bool)
+    readJson(scanner *bufio.Scanner) *fastjson.JSONObject
+    writeJson(t FORMAT, writer io.WriterTo, sheetName string, row int, object *fastjson.JSONObject)
+}
+
+type ExcelExporter struct {
+}
+
+func (exporter *ExcelExporter) writeJson2Excel(xlsx *excelize.File, sheetName string, row int,
+    object *fastjson.JSONObject, keys []string) {
+    if object == nil {
+        for i, key := range keys {
+            xlsx.SetCellValue(sheetName,
+                fmt.Sprintf("%s%d", string(CAPITALS[i]), row+1),
+                key)
+        }
+    } else {
+        for i, key := range keys {
+            xlsx.SetCellValue(sheetName,
+                fmt.Sprintf("%s%d", string(CAPITALS[i]), row+1),
+                object.Get(key))
+        }
+    }
+
+}
+
+type ShopExporter struct {
+    ExcelExporter
+    siteName      string
+    item          TStruct
+    keys          []string
+    recordFile    *os.File
+    exportedIdMap map[string]int
+}
+
+func (exporter *ShopExporter) exportId(id string, index int) {
+    exporter.exportedIdMap[id] = index
+}
+
+func (exporter *ShopExporter) idExportedIndex(id string) (int, bool) {
+    v, ok := exporter.exportedIdMap[id]
+    return v, ok
+}
+
+func (exporter *ShopExporter) writeJson(t FORMAT, writer io.WriterTo, sheetName string, row int, object *fastjson.JSONObject) {
+    switch t {
+    case EXCEL_FORMAT:
+        exporter.writeJson2Excel(writer.(*excelize.File), sheetName, row, object, exporter.keys)
+    }
+}
+
+func (exporter *ShopExporter) archiveRecordFile(f *os.File) {
+    oldName := f.Name()
+    _ = os.Rename(oldName, oldName+".bak")
+    _ = f.Close()
+}
+
+func (exporter *ShopExporter) openRecordFile() (f *os.File) {
+    var siteName = exporter.siteName
     files, err := ioutil.ReadDir("./")
     for _, fn := range files {
         fname := fn.Name()
@@ -25,15 +99,18 @@ func openRecordFile(siteName string) (f *os.File) {
         }
     }
     PanicError(err)
+    exporter.recordFile = f
     return f
 }
 
-func readJson(scanner *bufio.Scanner) *fastjson.JSONObject {
+func (exporter *ShopExporter) readJson(scanner *bufio.Scanner) *fastjson.JSONObject {
     scanner.Scan()
     jsonStr := scanner.Text()
-    err := scanner.Err()
+    var err error
+    err = scanner.Err()
     if err != nil {
         logrus.Error(err)
+        return nil
     }
     if jsonStr == "" {
         return nil
@@ -41,25 +118,29 @@ func readJson(scanner *bufio.Scanner) *fastjson.JSONObject {
     return fastjson.ParseObject(jsonStr)
 }
 
-func Export2Excel() {
-    var jo *fastjson.JSONObject
-    const siteName = "dianping"
-    f := openRecordFile(siteName)
+func Export2Excel(siteName string, t T) {
+    var exporter Exporter
+    switch t {
+    case T_SHOP:
+        exporter = &ShopExporter{siteName: siteName, keys: Shop{}.getShopFields()}
+    }
+    f := exporter.openRecordFile()
     xlsx := CreateExcel(siteName)
-    writeHeader(xlsx, siteName)
+
+    // write header
+    exporter.writeJson(EXCEL_FORMAT, xlsx, siteName, 0, nil)
     scanner := bufio.NewScanner(f)
     scanner.Split(bufio.ScanLines)
     var i = 1
-    jo = readJson(scanner)
-    idRowMap := make(map[string]int)
-    for ; jo != nil; jo = readJson(scanner) {
-        id, _ := jo.GetString("id")
-        index, written := idRowMap[id]
+    st := exporter.readJson(scanner)
+    for ; st != nil; st = exporter.readJson(scanner) {
+        id, _ := st.GetString("id")
+        index, written := exporter.idExportedIndex(id)
         if written {
-            WriteJson2Excel(xlsx, siteName, jo, index)
+            exporter.writeJson(EXCEL_FORMAT, xlsx, siteName, index, st)
         } else {
-            WriteJson2Excel(xlsx, siteName, jo, i)
-            idRowMap[id] = i
+            exporter.writeJson(EXCEL_FORMAT, xlsx, siteName, i, st)
+            exporter.exportId(id, i)
             i++
         }
     }
@@ -67,39 +148,22 @@ func Export2Excel() {
     // Save xlsx file by the given path.
     err := xlsx.Save()
     PanicError(err)
-
-}
-func WriteJson2Excel(xlsx *excelize.File, sheetName string, jo *fastjson.JSONObject, row int) {
-    for i, field := range fields {
-        xlsx.SetCellValue(sheetName,
-            fmt.Sprintf("%s%d", string(A_Z[i]), row+1),
-            jo.Get(field))
-    }
+    exporter.archiveRecordFile(f)
 }
 
-func excelFn(siteName string) string {
+func excelFn(sheetName string) string {
     y, m, d := time.Now().Date()
-    return fmt.Sprintf("%s_%d_%d_%d.xlsx", siteName, y, m, d)
+    return fmt.Sprintf("%s_%d_%d_%d.xlsx", sheetName, y, m, d)
 }
 
-func writeHeader(xlsx *excelize.File, sheetName string) {
-    for i, field := range fields {
-        xlsx.SetCellValue(sheetName,
-            fmt.Sprintf("%s%d", string(A_Z[i]), 1),
-            field)
-    }
-    err := xlsx.Save()
-    PanicError(err)
-}
-
-func CreateExcel(siteName string) (xlsx *excelize.File) {
-    var fn = excelFn(siteName)
+func CreateExcel(sheetname string) (xlsx *excelize.File) {
+    var fn = excelFn(sheetname)
     var err error
     if _, err = os.Stat(fn); os.IsNotExist(err) {
         xlsx = excelize.NewFile()
         xlsx.Path = fn
         // Create a new sheet.
-        xlsx.SetSheetName("Sheet1", siteName)
+        xlsx.SetSheetName("Sheet1", sheetname)
         // Set active sheet of the workbook.
         // xlsx.SetActiveSheet(index)
     } else {
@@ -110,22 +174,6 @@ func CreateExcel(siteName string) (xlsx *excelize.File) {
 
 }
 
-const A_Z = "ABCDEFGHIJKLMNOPQRST"
-
-var fields []string
-
 func main() {
-    fields = getShopFields()
-    logrus.Infof("shop fields: %v", fields)
-    Export2Excel()
-}
-
-func getShopFields() []string {
-    t := reflect.TypeOf(Shop{})
-    c := t.NumField()
-    var ret = make([]string, c)
-    for i := 0; i < c; i++ {
-        ret[i] = t.Field(i).Tag.Get("json")
-    }
-    return ret
+    Export2Excel("dianping", T_SHOP)
 }

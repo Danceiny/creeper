@@ -1,0 +1,1 @@
+go build -o worker config.go processor.go crawler_task.go utils.go dianping_crawler.go models.go

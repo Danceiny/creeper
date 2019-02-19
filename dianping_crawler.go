@@ -35,15 +35,6 @@ var async = fastjson.GetEnvOrDefault("ASYNC_MODE", true).(bool)
 type Dianping struct {
 }
 
-type Shop struct {
-    Id        string               `json:"id"`
-    Title     string               `json:"title"`
-    Contacts  []string             `json:"contacts"`
-    Url       string               `json:"url"`
-    CrawledAt *time.Time           `json:"crawled_at"`
-    Images    []string             `json:"images"`
-    Attr      *fastjson.JSONObject `json:"attr"`
-}
 
 func (*Dianping) crawl(task *CrawlerTask) interface{} {
     log.Infof("run dianping crawler...")

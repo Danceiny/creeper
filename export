@@ -1,1 +1,1 @@
-go run exporter.go dianping_crawler.go config.go task_model.go utils.go
+go run exporter.go dianping_crawler.go config.go crawler_task.go utils.go models.go
