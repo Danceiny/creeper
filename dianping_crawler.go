@@ -37,7 +37,7 @@ type Dianping struct {
 }
 
 func (*Dianping) crawl(task *CrawlerTask) interface{} {
-    log.Infof("run dianping crawler...")
+    log.Debugf("run dianping crawler...")
     var fn = task.ResultFilename()
     var err error
     if _, err := os.Stat(fn); os.IsNotExist(err) {
@@ -68,7 +68,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
     if PROXYS == nil || len(PROXYS) == 0 {
         PROXYS = GetAllProxyUrl()
     }
-    log.Infof("proxys size: %d, example: %s", len(PROXYS), PROXYS[0])
+    log.Debugf("proxys size: %d, example: %s", len(PROXYS), PROXYS[0])
     var rp colly.ProxyFunc
     rp, err = RoundRobinProxySwitcher(PROXYS...)
     // PanicError(err)
@@ -102,7 +102,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
         var shouldVisit = false
         // Print link
         matchArr := shopReg.FindStringSubmatch(link)
-        // log.Infof("Link found: text: %q, link: %s, absUrl: %q, matchArr: %q",
+        // log.Debugf("Link found: text: %q, link: %s, absUrl: %q, matchArr: %q",
         //     e.Text, link, absUrl, matchArr)
         if len(matchArr) == 2 || urlReg.Match([]byte(absUrl)) {
             resultMutex.Lock()
@@ -123,7 +123,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
         links := e.ChildAttrs("a[href]", "href")
         for _, link := range links {
             absLink := e.Request.AbsoluteURL(link)
-            log.Infof("访问详情页: %s", absLink)
+            log.Debugf("访问详情页: %s", absLink)
             _ = c.Visit(absLink)
         }
     })
@@ -135,7 +135,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
         if len(match) == 2 {
             id = match[1]
         } else {
-            log.Infof("没有匹配到商户id， url: %s", url)
+            log.Debugf("没有匹配到商户id， url: %s", url)
             return
         }
         contact := e.Attr("data-phone")
@@ -190,12 +190,12 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
     // Before making a request print "Visiting ..."
     c.OnRequest(func(r *colly.Request) {
         r.Headers.Set("User-Agent", RandomUserAgent())
-        log.Infof("Visiting %s with proxy: %s, headers: %v",
+        log.Debugf("Visiting %s with proxy: %s, headers: %v",
             r.URL.String(), r.ProxyURL, r.Headers)
     })
 
     c.OnResponse(func(r *colly.Response) {
-        log.Infof("Visiting %s with proxy: %s, "+
+        log.Debugf("Visiting %s with proxy: %s, "+
             "responding headers: %v", r.Request.ProxyURL, r.Headers)
     })
 
