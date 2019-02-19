@@ -1,8 +1,11 @@
 package main
 
 import (
+    "fmt"
+    "github.com/Danceiny/go.fastjson"
     "github.com/Danceiny/gocelery"
     log "github.com/sirupsen/logrus"
+    "os"
     "time"
 )
 
@@ -38,9 +41,12 @@ func executeTask() {
     if err != nil {
         log.Fatal(err)
     }
-    result, err := task.Get(100 * time.Second)
+    result, err := task.Get(24 * time.Hour)
     if err != nil {
         log.Fatal(err)
     }
     log.Infof("%v", result)
+    f, err := os.Create(fmt.Sprintf("./client/%d.log", time.Now().Unix()))
+    defer f.Close()
+    _, _ = f.Write(fastjson.ToJSON(result))
 }

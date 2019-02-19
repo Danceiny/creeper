@@ -32,7 +32,7 @@ func Arr2RegOr(arr []string, prefix string, suffix string) string {
 }
 
 func GetProxyIp() string {
-    resp, _ := grequests.Get(PROXY_SERVER_API, nil)
+    resp, _ := grequests.Get(PROXY_SERVER_API+"/", nil)
     return resp.String()
 }
 
@@ -41,7 +41,7 @@ func GetProxyUrl() *url.URL {
 }
 
 func GetAllProxyUrl() []string {
-    resp, err := grequests.Get(PROXY_SERVER_API+"_all", nil)
+    resp, err := grequests.Get(PROXY_SERVER_API+"_all/", nil)
     if err != nil {
         logrus.Error(err)
         return nil

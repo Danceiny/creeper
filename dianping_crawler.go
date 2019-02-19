@@ -6,7 +6,6 @@ import (
     . "github.com/Danceiny/go.utils"
     "github.com/PuerkitoBio/goquery"
     "github.com/gocolly/colly"
-    "github.com/gocolly/redisstorage"
     log "github.com/sirupsen/logrus"
     "math/rand"
     "os"
@@ -16,28 +15,13 @@ import (
     "time"
 )
 
-var DianpingCrawler *Dianping
-
-func init() {
-    DianpingCrawler = &Dianping{}
-}
-
-var shopReg = regexp.MustCompile(`.com/shop/([0-9]+)$`)
-
-var storage = &redisstorage.Storage{
-    Address:  fmt.Sprintf("%s:%s", CELERY_BACKEND_HOST, CELERY_BACKEND_PORT),
-    Password: CELERY_BACKEND_PASSWORD,
-    DB:       0,
-    Prefix:   "creeper",
-}
-
-var async = fastjson.GetEnvOrDefault("ASYNC_MODE", true).(bool)
-
 type Dianping struct {
 }
 
+var shopReg = regexp.MustCompile(`\.com/shop/([0-9]+)$`)
+
 func (*Dianping) crawl(task *CrawlerTask) interface{} {
-    log.Debugf("run dianping crawler...")
+    log.Infof("run dianping crawler...")
     var fn = task.ResultFilename()
     var err error
     if _, err := os.Stat(fn); os.IsNotExist(err) {
@@ -95,7 +79,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
         var shouldVisit = false
         // Print link
         matchArr := shopReg.FindStringSubmatch(link)
-        // log.Debugf("Link found: text: %q, link: %s, absUrl: %q, matchArr: %q",
+        // log.Infof("Link found: text: %q, link: %s, absUrl: %q, matchArr: %q",
         //     e.Text, link, absUrl, matchArr)
         if len(matchArr) == 2 || urlReg.Match([]byte(absUrl)) {
             resultMutex.Lock()
@@ -116,7 +100,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
         links := e.ChildAttrs("a[href]", "href")
         for _, link := range links {
             absLink := e.Request.AbsoluteURL(link)
-            log.Debugf("访问详情页: %s", absLink)
+            log.Infof("访问详情页: %s", absLink)
             _ = c.Visit(absLink)
         }
     })
@@ -128,7 +112,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
         if len(match) == 2 {
             id = match[1]
         } else {
-            log.Debugf("没有匹配到商户id， url: %s", url)
+            log.Warningf("没有匹配到商户id， url: %s", url)
             return
         }
         contact := e.Attr("data-phone")
@@ -204,7 +188,6 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
     })
 
     log.Infof("start visiting %q", task.urls())
-    // StartWorker scraping on https://hackerspaces.org
     enter(c, task)
     if async {
         c.Wait()

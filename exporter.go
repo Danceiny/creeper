@@ -82,8 +82,8 @@ func (exporter *ShopExporter) writeJson(t FORMAT, writer io.WriterTo, sheetName 
 }
 
 func (exporter *ShopExporter) archiveRecordFile(f *os.File) {
-    oldName := f.Name()
-    _ = os.Rename(oldName, oldName+".bak")
+    // oldName := f.Name()
+    // _ = os.Rename(oldName, oldName+".bak")
     _ = f.Close()
 }
 
@@ -122,7 +122,9 @@ func Export2Excel(siteName string, t T) {
     var exporter Exporter
     switch t {
     case T_SHOP:
-        exporter = &ShopExporter{siteName: siteName, keys: Shop{}.getShopFields()}
+        exporter = &ShopExporter{siteName: siteName,
+            keys:          Shop{}.getShopFields(),
+            exportedIdMap: make(map[string]int)}
     }
     f := exporter.openRecordFile()
     xlsx := CreateExcel(siteName)
