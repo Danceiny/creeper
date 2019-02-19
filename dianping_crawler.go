@@ -22,7 +22,7 @@ func init() {
     DianpingCrawler = &Dianping{}
 }
 
-var shopReg = regexp.MustCompile(`/shop/([0-9]+)`)
+var shopReg = regexp.MustCompile(`.com/shop/([0-9]+)`)
 
 var storage = &redisstorage.Storage{
     Address:  fmt.Sprintf("%s:%s", CELERY_BACKEND_HOST, CELERY_BACKEND_PORT),
@@ -73,13 +73,6 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
     rp, err = RoundRobinProxySwitcher(PROXYS...)
     // PanicError(err)
     c.SetProxyFunc(rp)
-    storage := &redisstorage.Storage{
-        Address:  fmt.Sprintf("%s:%d", CELERY_BACKEND_HOST, CELERY_BACKEND_PORT),
-        Password: CELERY_BACKEND_PASSWORD,
-        DB:       0,
-        Prefix:   "leads_factory",
-    }
-
     // add storage to the collector
     err = c.SetStorage(storage)
     if err != nil {
