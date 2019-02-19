@@ -103,7 +103,6 @@ func (task *CrawlerTask) urls() []string {
             urls[cnt] = fmt.Sprintf("%s/%s", task.Url, url)
             cnt++
         }
-
     }
     return urls
 }

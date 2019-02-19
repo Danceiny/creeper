@@ -13,7 +13,7 @@ var (
     storage         *redisstorage.Storage
 )
 
-func init() {
+func initWorker() {
     DianpingCrawler = &Dianping{}
     async = fastjson.GetEnvOrDefault("ASYNC_MODE", true).(bool)
     storage = &redisstorage.Storage{
@@ -25,6 +25,7 @@ func init() {
 }
 
 func StartWorker() {
+    initWorker()
     // create broker and backend
     celeryBroker := gocelery.NewRedisCeleryBroker(CELERY_BROKER_HOST, CELERY_BROKER_PORT, 0, CELERY_BROKER_PASSWORD)
     celeryBackend := gocelery.NewRedisCeleryBackend(CELERY_BACKEND_HOST, CELERY_BACKEND_PORT, 0, CELERY_BACKEND_PASSWORD)
@@ -36,8 +37,4 @@ func StartWorker() {
     // this worker uses args
     celeryServer.Register("runTask", &CrawlerTask{})
     celeryServer.StartWorker()
-}
-
-func main() {
-    StartWorker()
 }

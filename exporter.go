@@ -176,6 +176,6 @@ func CreateExcel(sheetname string) (xlsx *excelize.File) {
 
 }
 
-func main() {
+func Export() {
     Export2Excel("dianping", T_SHOP)
 }

@@ -24,16 +24,15 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
     log.Infof("run dianping crawler...")
     var fn = task.ResultFilename()
     var err error
+    var f *os.File
     if _, err := os.Stat(fn); os.IsNotExist(err) {
-        _, _ = os.Create(fn)
+        f, err = os.Create(fn)
+        // _, err = f.WriteString("fuck you")
+        // PanicError(err)
+    } else {
+        f, err = os.OpenFile(fn, os.O_WRONLY|os.O_APPEND, 0666)
     }
-    f, err := os.OpenFile(fn, os.O_WRONLY|os.O_APPEND, 0666)
     PanicError(err)
-    // f.Seek(0, 2)
-    defer func() {
-        _ = f.Close()
-    }()
-
     // Instantiate default collector
     c := colly.NewCollector(
         // Visit only domains: www.dianping.com
@@ -180,11 +179,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
         url := response.Request.URL.String()
         log.Errorf("url:[%s] respond status_code: %d, error: %v",
             url, response.StatusCode, e)
-        for _, var1 := range task.urls() {
-            if url == var1 {
-                reenter(c, url)
-            }
-        }
+        reenter(c, url)
     })
 
     log.Infof("start visiting %q", task.urls())
@@ -196,6 +191,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
     for _, v := range visitedShops {
         result = append(result, v.Contacts...)
     }
+    f.Close()
     return result
 }
 

@@ -1,12 +1,14 @@
 REDIS_HOST=192.168.1.40
-cd proxy_pool/Run
-lsof -i:5010|grep python|awk '{print $2}'|xargs kill
-PROXY_BACKEND_HOST=$REDIS_HOST python main.py > proxy.log 2>&1 &
-cd ../../
-
+if [[ $1 == "--proxy" || $2 == "--proxy" ]]
+then 
+    cd proxy_pool/Run
+    lsof -i:5010|grep python|awk '{print $2}'|xargs kill -9
+    PROXY_BACKEND_HOST=$REDIS_HOST python main.py > proxy.log 2>&1 &
+    cd ../../
+fi
 if [[ $1 == "exe" ]]
 then
-    CELERY_BROKER_HOST=$REDIS_HOST CELERY_BACKEND_HOST=$REDIS_HOST ./worker
+    CELERY_BROKER_HOST=$REDIS_HOST CELERY_BACKEND_HOST=$REDIS_HOST CMD=worker ./creeper
 else
-    CELERY_BROKER_HOST=$REDIS_HOST CELERY_BACKEND_HOST=$REDIS_HOST go run utils.go config.go crawler_task.go models.go dianping_crawler.go processor.go
+    CELERY_BROKER_HOST=$REDIS_HOST CELERY_BACKEND_HOST=$REDIS_HOST CMD=worker go run .
 fi
