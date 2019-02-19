@@ -5,6 +5,7 @@ import (
     . "github.com/Danceiny/go.utils"
 )
 
+// 环境变量
 var (
     CELERY_BROKER_HOST      string
     CELERY_BROKER_PORT      int
@@ -14,7 +15,11 @@ var (
     CELERY_BACKEND_PASSWORD string
     PROXY_SERVER_ADDR       string
     PROXY_SERVER_API        string
-    PROXYS                  []string
+    OPEN_ASYNC_MODE         bool
+)
+// 全局可见变量
+var (
+    PROXYS []string
 )
 
 func init() {

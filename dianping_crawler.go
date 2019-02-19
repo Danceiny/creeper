@@ -39,7 +39,7 @@ func (self *Dianping) crawl(task *CrawlerTask) interface{} {
         // Visit only domains: www.dianping.com
         colly.AllowedDomains(task.Url.Host),
         // Turn on asynchronous requests
-        colly.Async(async),
+        colly.Async(OPEN_ASYNC_MODE),
         colly.AllowURLRevisit(),
     )
     err = c.Limit(&colly.LimitRule{
@@ -185,7 +185,7 @@ func (self *Dianping) crawl(task *CrawlerTask) interface{} {
 
     log.Infof("start visiting %q", task.urls())
     enter(c, task)
-    if async {
+    if OPEN_ASYNC_MODE {
         c.Wait()
     }
     result := make([]string, 0, 1024)
