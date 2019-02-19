@@ -8,6 +8,7 @@ import (
     "github.com/gocolly/colly"
     "github.com/gocolly/redisstorage"
     log "github.com/sirupsen/logrus"
+    "math/rand"
     "os"
     "regexp"
     "strings"
@@ -34,7 +35,6 @@ var async = fastjson.GetEnvOrDefault("ASYNC_MODE", true).(bool)
 
 type Dianping struct {
 }
-
 
 func (*Dianping) crawl(task *CrawlerTask) interface{} {
     log.Infof("run dianping crawler...")
@@ -116,17 +116,6 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
             log.Warningf("why not visit me? url: %v, href: %s", e.Request.URL, link)
         }
     })
-
-    // c.OnHTML("div[class=page]", func(e *colly.HTMLElement) {
-    //     log.Infof("分页url: %q", e.Request.URL)
-    //     // shop := &Shop{}
-    //     // shop. = e.ChildAttr("a[data-event-action=title]", "href")
-    //     links := e.ChildAttrs("a[href]", "href")
-    //     for _, link := range links {
-    //         log.Infof("visit page: %s", link)
-    //         c.Visit(e.Request.AbsoluteURL(link))
-    //     }
-    // })
 
     c.OnHTML("div[class=tit]", func(e *colly.HTMLElement) {
         // shop := &Shop{}
@@ -246,5 +235,7 @@ func enter(c *colly.Collector, task *CrawlerTask) {
 
 func reenter(c *colly.Collector, url string) {
     time.Sleep(10 * time.Second)
+    url = regexp.MustCompile(`/p\d+`).ReplaceAllString(url,
+        fmt.Sprintf("/p%d", rand.Intn(128)))
     _ = c.Visit(url)
 }
