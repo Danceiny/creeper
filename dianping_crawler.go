@@ -22,7 +22,7 @@ func init() {
     DianpingCrawler = &Dianping{}
 }
 
-var shopReg = regexp.MustCompile(`.com/shop/([0-9]+)`)
+var shopReg = regexp.MustCompile(`.com/shop/([0-9]+)$`)
 
 var storage = &redisstorage.Storage{
     Address:  fmt.Sprintf("%s:%s", CELERY_BACKEND_HOST, CELERY_BACKEND_PORT),
