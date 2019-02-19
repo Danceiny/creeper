@@ -16,11 +16,12 @@ import (
 )
 
 type Dianping struct {
+    MaxPageNum int
 }
 
 var shopReg = regexp.MustCompile(`\.com/shop/([0-9]+)$`)
 
-func (*Dianping) crawl(task *CrawlerTask) interface{} {
+func (self *Dianping) crawl(task *CrawlerTask) interface{} {
     log.Infof("run dianping crawler...")
     var fn = task.ResultFilename()
     var err error
@@ -179,7 +180,7 @@ func (*Dianping) crawl(task *CrawlerTask) interface{} {
         url := response.Request.URL.String()
         log.Errorf("url:[%s] respond status_code: %d, error: %v",
             url, response.StatusCode, e)
-        reenter(c, url)
+        self.reenter(c, url)
     })
 
     log.Infof("start visiting %q", task.urls())
@@ -205,9 +206,9 @@ func enter(c *colly.Collector, task *CrawlerTask) {
     }
 }
 
-func reenter(c *colly.Collector, url string) {
+func (self *Dianping) reenter(c *colly.Collector, url string) {
     time.Sleep(10 * time.Second)
     url = regexp.MustCompile(`/p\d+`).ReplaceAllString(url,
-        fmt.Sprintf("/p%d", rand.Intn(128)))
+        fmt.Sprintf("/p%d", rand.Intn(self.MaxPageNum)))
     _ = c.Visit(url)
 }

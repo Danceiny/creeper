@@ -92,10 +92,10 @@ func (task *CrawlerTask) urls() []string {
     var urls = make([]string, total)
     var cnt = 0
     for _, url := range task.SubUrls {
-        url = reg.ReplaceAllString(url, fmt.Sprint(rand.Intn(64)))
+        url = reg.ReplaceAllString(url, fmt.Sprint(rand.Intn(32)))
         if task.SubUrls2 != nil && len(task.SubUrls2) > 0 {
             for _, url2 := range task.SubUrls2 {
-                url2 = reg.ReplaceAllString(url2, fmt.Sprint(rand.Intn(64)))
+                url2 = reg.ReplaceAllString(url2, fmt.Sprint(rand.Intn(32)))
                 urls[cnt] = fmt.Sprintf("%s/%s/%s", task.Url, url, url2)
                 cnt++
             }
