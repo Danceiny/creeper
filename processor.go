@@ -14,7 +14,6 @@ var (
 
 func initWorker() {
     DianpingCrawler = &Dianping{fastjson.GetEnvOrDefault("DIANPING_MAX_PAGE_NUMBER", 50).(int)}
-    OPEN_ASYNC_MODE = fastjson.GetEnvOrDefault("ASYNC_MODE", true).(bool)
     storage = &redisstorage.Storage{
         Address:  fmt.Sprintf("%s:%d", CELERY_BACKEND_HOST, CELERY_BACKEND_PORT),
         Password: CELERY_BACKEND_PASSWORD,
